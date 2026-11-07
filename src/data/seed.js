@@ -4,6 +4,13 @@ export const IDS = {
   mod: "10000000-0000-4000-8000-000000000003",
 };
 export const SEED_PASSWORD = "Vecinos2026!";
+// Public example accounts use a precomputed credential so browsing can start
+// immediately. User-created accounts still derive their own salted password hash.
+export const SEED_LOCAL_CREDENTIALS = Object.freeze({
+  salt: "entrevecinos.public-examples.v1",
+  password_hash:
+    "c861d8a254dc23497be76df87da1466252acccb9f281ff9823c5d13ef79153fd",
+});
 export function createSeed() {
   const date = "2026-10-20T15:00:00.000Z";
   const common = {

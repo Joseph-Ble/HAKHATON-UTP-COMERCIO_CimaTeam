@@ -1,0 +1,7 @@
+Fresh first launch renders home and all three modules
+Navigation: El talento de tu barrio
+Navigation: Compartir nos acerca
+Navigation: Una comunidad que se cuida
+Neighborhood change filters local businesses to Aula Compartida
+Cold launch retains neighborhood and stored local data with a new process
+All native APK checks passed

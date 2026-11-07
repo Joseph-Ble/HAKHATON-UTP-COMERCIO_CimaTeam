@@ -11,7 +11,7 @@ npm start
 
 Para navegador: `npm run web`. Para Android durante desarrollo, utiliza un dispositivo o emulador compatible con la versión de Expo; la APK interna permite instalar sin Expo Go, Metro ni USB. La versión mínima de Android generada por este proyecto es API 24 (Android 7).
 
-**Datos locales y cuentas.** Sin variables de Supabase la app inicializa datos de ejemplo y persiste cambios con AsyncStorage. La sesión nativa usa SecureStore. Las contraseñas locales se almacenan con sal y PBKDF2-SHA256 (210 000 iteraciones). La información sobre esta modalidad aparece en Ajustes; no hay rótulos «Demo» en la portada.
+**Datos locales y cuentas.** Sin variables de Supabase la app inicializa datos de ejemplo y persiste cambios con AsyncStorage. La sesión nativa usa SecureStore. Las contraseñas locales se almacenan con sal y PBKDF2-SHA256 (210 000 iteraciones). Las credenciales públicas de ejemplo incluyen el hash precalculado para evitar un cálculo costoso en el primer arranque. El registro mantiene sal aleatoria por cuenta y la autenticación mantiene PBKDF2. La información sobre esta modalidad aparece en Ajustes; no hay rótulos «Demo» en la portada.
 
 | Perfil de ejemplo | Correo                    | Contraseña   |
 | ----------------- | ------------------------- | ------------ |
@@ -70,7 +70,7 @@ export ANDROID_HOME=/ruta/a/tu/android-sdk
 npm run build:android
 ```
 
-El script genera el proyecto nativo con Expo y ejecuta `assembleRelease`. La configuración generada usa la clave de desarrollo para distribución interna; no es una firma de producción para Google Play. Conserva y protege tu keystore propio si preparas una versión pública. El directorio nativo se regenera y está excluido de Git. La APK y el checksum se copian a `artifacts/EntreVecinos-1.0.0.apk` y `artifacts/EntreVecinos-1.0.0.sha256` cuando la compilación termina correctamente.
+El script reutiliza el proyecto nativo existente y ejecuta `assembleRelease`; solo genera Android con Expo si el directorio no existe. Si cambias la configuración Expo que afecta a Android, respalda los archivos nativos y la clave antes de ejecutar un prebuild explícito. La configuración generada usa la clave de desarrollo para distribución interna; no es una firma de producción para Google Play. Conserva y protege tu keystore propio si preparas una versión pública. El directorio nativo está excluido de Git. La APK y el checksum se copian a `artifacts/EntreVecinos-1.0.0.apk` y `artifacts/EntreVecinos-1.0.0.sha256` cuando la compilación termina correctamente.
 
 Para instalar, transfiere la APK al Android, ábrela y autoriza la instalación desde esa fuente. Alternativamente, con herramientas Android: `adb install -r artifacts/EntreVecinos-1.0.0.apk`. Una vez instalada, prueba apertura en frío sin Metro y sin USB. Consulta `docs/PRUEBAS.md` para el estado comprobado de la entrega.
 

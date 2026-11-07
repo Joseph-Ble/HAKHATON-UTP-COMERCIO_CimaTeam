@@ -1,0 +1,45 @@
+{
+  "backup_sha256": "d38010b8783c9c79313a7d458597903719cb6724d88290582b19ddc65682c22c",
+  "restored_head": "666eb171302cb8a45107701b58139e9d01c953ed",
+  "original_commit_count": 4,
+  "automated_tests": {
+    "unit_postgres_auth": 27,
+    "web_local_production": 7,
+    "remote_adapter_simulated_auth": 2,
+    "failed": 0,
+    "total": 36
+  },
+  "android": {
+    "build": "assembleRelease passed",
+    "package": "pe.cimateam.entrevecinos",
+    "version": "1.0.0",
+    "version_code": 1,
+    "minimum_sdk": 24,
+    "target_sdk": 36,
+    "architectures": [
+      "arm64-v8a",
+      "x86_64"
+    ],
+    "hermes_bundle": true,
+    "synthetic_backend_absent": true,
+    "signature": "APK Signature Scheme v2, original development key",
+    "alignment": "16 KB passed",
+    "apk_bytes": 59949661,
+    "apk_sha256": "52de9a1570563a7bb64c7c8c7f005c61d0df49c83653fc5ab5e444e5d5224d31",
+    "install": "Clean installation: Success on Android 9 / API 28 x86_64",
+    "startup": "First launch and cold launch: Status ok; home, three modules and persisted neighborhood verified",
+    "native_checks_passed": 6,
+    "native_checks_failed": 0,
+    "installed_apk_sha256": "52de9a1570563a7bb64c7c8c7f005c61d0df49c83653fc5ab5e444e5d5224d31",
+    "wifi_mobile_data_disabled": true,
+    "metro": false,
+    "physical_device_tested": false
+  },
+  "supabase_live_configured": false,
+  "push": false,
+  "deployment": false,
+  "corrections": [
+    "Reuse existing native Android directory during builds",
+    "Precompute only public sample credentials to avoid blocking first local startup; user PBKDF2 and existing data remain compatible"
+  ]
+}

@@ -1,0 +1,4 @@
+Success
+/workspace/EntreVecinos-restaurado/artifacts/EntreVecinos-1.0.0.apk: 1 file pushed, 0 skipped. 13.9 MB/s (59949661 bytes in 4.127s)
+Performing Push Install
+Success

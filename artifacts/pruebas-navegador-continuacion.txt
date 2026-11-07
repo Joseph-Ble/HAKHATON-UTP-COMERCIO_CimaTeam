@@ -1,0 +1,23 @@
+
+> entrevecinos@1.0.0 test:e2e
+> playwright test tests/e2e/flows.spec.js
+
+
+Running 7 tests using 1 worker
+
+(node:10709) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 tests/e2e/flows.spec.js:3:1 › author editing, consent withdrawal and private coordination without a phone (12.2s)
+  ✓  2 tests/e2e/flows.spec.js:79:1 › A01–A03: public browsing, search, neighborhoods and a mobile layout (3.4s)
+  ✓  3 tests/e2e/flows.spec.js:119:1 › A04–A05/A14: business ownership, review, reporting and moderation (12.5s)
+  ✓  4 tests/e2e/flows.spec.js:182:1 › A12–A13: create help, offer, accept, reply and close with persisted history (12.7s)
+  ✓  5 tests/e2e/flows.spec.js:241:1 › A06–A09: sell, buy, swap and free help plus solidarity review (11.7s)
+  ✓  6 tests/e2e/flows.spec.js:297:1 › A10–A11/A17: official content precedes reports and emergencies have no stars (3.1s)
+  ✓  7 tests/e2e/flows.spec.js:326:1 › registration, login persistence, author edits and safe input errors (5.1s)
+
+  7 passed (1.0m)
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.2
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.2
+npm notice To update run: npm install -g npm@12.2.2
+npm notice

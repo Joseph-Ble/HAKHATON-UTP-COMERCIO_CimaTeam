@@ -1,0 +1,20 @@
+{
+  "platform": "Android 9 / API 28 x86_64",
+  "hardware_acceleration": false,
+  "network_disabled": true,
+  "metro": false,
+  "checks": [
+    "Fresh first launch renders home and all three modules",
+    "Navigation: El talento de tu barrio",
+    "Navigation: Compartir nos acerca",
+    "Navigation: Una comunidad que se cuida",
+    "Neighborhood change filters local businesses to Aula Compartida",
+    "Cold launch retains neighborhood and stored local data with a new process"
+  ],
+  "passed": 6,
+  "failed": 0,
+  "old_pid": "2877",
+  "new_pid": "3411",
+  "cold_launch": "Starting: Intent { cmp=pe.cimateam.entrevecinos/.MainActivity }\nStatus: ok\nActivity: pe.cimateam.entrevecinos/.MainActivity\nThisTime: 6471\nTotalTime: 6471\nWaitTime: 6920\nComplete\n",
+  "app_errors": false
+}

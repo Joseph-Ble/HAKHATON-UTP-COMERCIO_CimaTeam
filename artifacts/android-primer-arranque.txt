@@ -1,0 +1,7 @@
+Starting: Intent { cmp=pe.cimateam.entrevecinos/.MainActivity }
+Status: ok
+Activity: pe.cimateam.entrevecinos/.MainActivity
+ThisTime: 6009
+TotalTime: 6009
+WaitTime: 7396
+Complete

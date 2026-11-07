@@ -14,7 +14,7 @@ import {
   parse,
   publicSnapshot,
 } from "../core/domain.js";
-import { createSeed, IDS, SEED_PASSWORD } from "./seed.js";
+import { createSeed, IDS, SEED_LOCAL_CREDENTIALS } from "./seed.js";
 import { sessionStorage } from "./sessionStorage.js";
 import { parseAuthLink } from "../core/authLinks.js";
 import { remoteError } from "../core/remoteErrors.js";
@@ -44,13 +44,11 @@ class LocalRepository {
       );
     } else {
       this.state = createSeed();
-      const salt = Crypto.randomUUID();
-      const password_hash = await hash(SEED_PASSWORD, salt);
       this.state.accounts = [
         ["ana@vecinos.example", IDS.ana],
         ["luis@vecinos.example", IDS.luis],
         ["comunidad@vecinos.example", IDS.mod],
-      ].map(([email, id]) => ({ email, id, salt, password_hash }));
+      ].map(([email, id]) => ({ email, id, ...SEED_LOCAL_CREDENTIALS }));
       await this.persist(this.state);
     }
     const session = await sessionStorage.getItem(SESSION_KEY);

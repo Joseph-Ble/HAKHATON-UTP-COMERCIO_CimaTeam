@@ -1,0 +1,22 @@
+{
+  "backup_sha256": "d38010b8783c9c79313a7d458597903719cb6724d88290582b19ddc65682c22c",
+  "internal_checksums": "11/11 OK",
+  "bundle_fsck": "OK",
+  "restored_head": "666eb171302cb8a45107701b58139e9d01c953ed",
+  "original_commits": [
+    "0968ecf44ac4746f17a99c55ef408a3a5888e29f",
+    "b8a9bb725cfea3708220c9c13dbfb815e93ee4c0",
+    "3f3ba61bfc617f325604c922840b2bd2d3038c81",
+    "666eb171302cb8a45107701b58139e9d01c953ed"
+  ],
+  "tracked_files_verified_at_restore": 78,
+  "ignored_files_verified_at_restore": 274,
+  "native_files_preserved": 43,
+  "sdk_path_adapted": "/workspace/EntreVecinos-restaurado/android/local.properties",
+  "tests": {
+    "unit_and_database": 26,
+    "web_local": 7,
+    "remote_adapter_simulated_auth": 2
+  },
+  "stack": "React Native + Expo SDK 58 + JavaScript"
+}

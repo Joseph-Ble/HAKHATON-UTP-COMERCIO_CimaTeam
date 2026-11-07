@@ -1,0 +1,45 @@
+
+> entrevecinos@1.0.0 test
+> node --test tests/*.test.js
+
+✔ native recovery accepts PKCE links and opaque tokens only on auth routes (2.196377ms)
+✔ web recovery requires the application origin and ignores unrelated links (0.235236ms)
+✔ expired links do not surface raw provider error descriptions (0.432897ms)
+✔ development links and signup confirmation use the same safe auth parser (0.225547ms)
+✔ remote errors explain network, session and form failures without database internals (0.964867ms)
+▶ PostgreSQL migration, RPC and RLS enforce the security boundary
+  ✔ server listing pages, text search and direct details enforce RLS (76.094537ms)
+  ✔ visitors read public data but no private offers, contacts, roles or reports (11.127293ms)
+  ✔ authenticated users cannot edit tables directly or self-assign roles (6.103306ms)
+  ✔ author is derived from session and another user cannot modify resource (9.763184ms)
+  ✔ database checks rating uniqueness, range, self-rating and historical barrio (44.008338ms)
+  ✔ request, offer, private reply and closure preserve a real state history (20.190796ms)
+  ✔ pending and hidden security reports are protected, including edits and direct reads (19.94655ms)
+  ✔ invalid contact rolls back a publication, and revoke removes access (7.438367ms)
+  ✔ editorial permissions and profile updates do not grant authority (7.632418ms)
+✔ PostgreSQL migration, RPC and RLS enforce the security boundary (2930.923002ms)
+✔ public navigation data includes all four solidarity types and both emergency categories (2.751916ms)
+✔ visitor and another owner cannot mutate resources (2.01407ms)
+✔ one rating per business and author, with server-derived historical barrio (12.802256ms)
+✔ cannot rate emergencies or incomplete solidarity experiences (1.145261ms)
+✔ help offers have ownership, uniqueness, private replies and atomic history (2.038492ms)
+✔ security edits return to review and cannot undo moderator hiding (3.925141ms)
+✔ contacts are explicitly consented, never exposed to visitors and revocable (7.391296ms)
+✔ a failed operation leaves state untouched, including contact and history (0.547527ms)
+✔ private proposals allow coordination without external contact (0.674041ms)
+✔ free help validates intent, modality and absence of money (3.722615ms)
+✔ retiring preserves records but removes them from views and contact lookup (0.436473ms)
+✔ precomputed public example credential retains PBKDF2-SHA256 compatibility (40.758114ms)
+ℹ tests 27
+ℹ suites 0
+ℹ pass 27
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3489.833744
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.2
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.2
+npm notice To update run: npm install -g npm@12.2.2
+npm notice
