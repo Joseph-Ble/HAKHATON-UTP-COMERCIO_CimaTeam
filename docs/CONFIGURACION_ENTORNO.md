@@ -15,4 +15,4 @@ El entorno dispone de unos 8 GB de disco. Fue necesario conservar herramientas y
 
 Configura `ANDROID_HOME`, JDK 21 para ejecutar Gradle y la toolchain JDK 17, además del proxy y la confianza TLS de la instancia. Los clientes Java deben confiar en la CA del entorno y utilizar su proxy HTTP/HTTPS. No copies rutas ni proxy del respaldo anterior. En esta instancia, las ubicaciones están en `/workspace/entrevecinos-tools/env.sh` y las propiedades de Gradle en `/workspace/entrevecinos-tools/gradle/gradle.properties`; son configuración temporal, fuera del producto.
 
-No se utilizó EAS ni se hicieron push o despliegues. La verificación de la APK y sus límites se registran en `PRUEBAS.md` y en `artifacts/`.
+No se utilizó EAS. Posteriormente se publicó la rama `main` en GitHub por autorización del usuario; no se realizaron despliegues. La verificación de la APK y sus límites se registran en `PRUEBAS.md` y en `artifacts/`.

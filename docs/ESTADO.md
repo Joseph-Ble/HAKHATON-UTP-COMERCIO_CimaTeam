@@ -14,4 +14,4 @@ Pasaron 27 pruebas unitarias/PostgreSQL/autenticación, siete recorridos locales
 
 Quedan pendientes el backend Supabase real, el correo/recuperación con un proveedor real y la sincronización entre dispositivos. Los ensayos remotos emplean PostgreSQL de pruebas y Auth simulado. Las herramientas temporales y los requisitos de recompilación están descritos en `CONFIGURACION_ENTORNO.md`.
 
-No se hicieron push, despliegues ni cambios en cuentas externas. Las correcciones y las evidencias se conservan en commits locales posteriores al checkpoint restaurado.
+Las correcciones y las evidencias se guardaron primero en commits locales posteriores al checkpoint restaurado. Tras una autorización posterior del usuario, el historial completo se publicó en la rama `main` de `https://github.com/Joseph-Ble/HAKHATON-UTP-COMERCIO_CimaTeam`. El repositorio permanece privado. No se hicieron despliegues ni cambios en servicios de la aplicación.

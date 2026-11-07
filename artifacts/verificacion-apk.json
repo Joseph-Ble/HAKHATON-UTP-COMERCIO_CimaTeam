@@ -36,10 +36,13 @@
     "physical_device_tested": false
   },
   "supabase_live_configured": false,
-  "push": false,
+  "push": true,
   "deployment": false,
   "corrections": [
     "Reuse existing native Android directory during builds",
     "Precompute only public sample credentials to avoid blocking first local startup; user PBKDF2 and existing data remain compatible"
-  ]
+  ],
+  "github_repository": "https://github.com/Joseph-Ble/HAKHATON-UTP-COMERCIO_CimaTeam",
+  "github_branch": "main",
+  "apk_source_commit": "299569c49d0654483f0ed516b4a6f662829a9af0"
 }
