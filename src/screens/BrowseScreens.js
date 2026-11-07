@@ -17,11 +17,13 @@ import {
   Info,
   Empty,
   Town,
+  ListingStatus,
   colors,
   fonts,
   openURL,
 } from "../components/ui.js";
 import { useApp } from "../data/AppProvider.js";
+import { useListing } from "../data/useReadModels.js";
 import {
   CATEGORIES,
   EMERGENCIES,
@@ -45,11 +47,13 @@ export function HomeScreen() {
   const { data, barrio } = useApp();
   const { width } = useWindowDimensions();
   const wide = width >= 700;
-  const businesses = publicRows(data.businesses, barrio).filter(
-    (b) => b.status === "active",
+  const businesses = fresh(
+    publicRows(data.businesses, barrio).filter((b) => b.status === "active"),
   );
-  const posts = publicRows(data.posts, barrio).filter(
-    (p) => p.module === "solidarity" && p.status === "active",
+  const posts = fresh(
+    publicRows(data.posts, barrio).filter(
+      (p) => p.module === "solidarity" && p.status === "active",
+    ),
   );
   return (
     <Page>
@@ -321,7 +325,7 @@ export function HomeScreen() {
       </View>
       <SectionTitle
         title="El barrio comparte"
-        subtitle={`${posts.length} publicaciones activas para conectar.`}
+        subtitle="Publicaciones para conectar con tus vecinos."
         action="Ver publicaciones"
         onPress={() => router.push("/solidaria")}
       />
@@ -338,7 +342,7 @@ export function LocalScreen() {
   const [search, setSearch] = useState(""),
     [category, setCategory] = useState("all"),
     [sort, setSort] = useState("recent");
-  let rows = fresh(
+  let localRows = fresh(
     publicRows(data.businesses, barrio).filter(
       (b) =>
         b.status === "active" &&
@@ -347,11 +351,17 @@ export function LocalScreen() {
     ),
   );
   if (sort === "recommended")
-    rows = rows.sort(
+    localRows = localRows.sort(
       (a, b) =>
         reviewStats(data.reviews, "business", b.id, barrio).local -
         reviewStats(data.reviews, "business", a.id, barrio).local,
     );
+  const list = useListing(
+    "business",
+    { barrio_id: barrio, search, category, sort },
+    localRows,
+  );
+  const rows = list.rows;
   return (
     <Page
       title="El talento de tu barrio"
@@ -385,8 +395,14 @@ export function LocalScreen() {
       <Row style={{ justifyContent: "space-between", flexWrap: "wrap" }}>
         <T style={{ fontSize: 13, color: colors.muted }}>
           {rows.length}{" "}
-          {rows.length === 1 ? "negocio encontrado" : "negocios encontrados"} en{" "}
-          {areaLabel(barrio)}
+          {list.remote
+            ? rows.length === 1
+              ? "negocio cargado"
+              : "negocios cargados"
+            : rows.length === 1
+              ? "negocio encontrado"
+              : "negocios encontrados"}{" "}
+          en {areaLabel(barrio)}
         </T>
         <Row>
           <Chip selected={sort === "recent"} onPress={() => setSort("recent")}>
@@ -405,7 +421,8 @@ export function LocalScreen() {
           <ItemCard key={r.id} scope="business" item={r} />
         ))}
       </CardGrid>
-      {!rows.length && (
+      <ListingStatus list={list} />
+      {!rows.length && !list.loading && !list.error && (
         <Empty
           action="Registrar un negocio"
           onPress={() => create("business")}
@@ -423,7 +440,7 @@ export function SolidarityScreen() {
   const [search, setSearch] = useState(""),
     [activeOnly, setActiveOnly] = useState(true),
     [intent, setIntent] = useState("all");
-  const rows = fresh(
+  const localRows = fresh(
     publicRows(data.posts, barrio).filter(
       (p) =>
         p.module === "solidarity" &&
@@ -433,6 +450,19 @@ export function SolidarityScreen() {
         (type !== "free" || intent === "all" || p.intent === intent),
     ),
   );
+  const list = useListing(
+    "post",
+    {
+      barrio_id: barrio,
+      module: "solidarity",
+      type,
+      search,
+      activeOnly,
+      intent: type === "free" ? intent : "all",
+    },
+    localRows,
+  );
+  const rows = list.rows;
   const change = (tipo) => router.setParams({ tipo });
   return (
     <Page
@@ -557,7 +587,8 @@ export function SolidarityScreen() {
           <ItemCard key={p.id} item={p} />
         ))}
       </CardGrid>
-      {!rows.length && (
+      <ListingStatus list={list} />
+      {!rows.length && !list.loading && !list.error && (
         <Empty
           action="Crear publicación"
           onPress={() => create("post", { type, module: "solidarity" })}
@@ -574,6 +605,28 @@ export function EmergencyScreen() {
   const category = ["security", "nature"].includes(categoria)
     ? categoria
     : null;
+  const localRows = fresh(
+    publicRows(data.posts, barrio).filter(
+      (p) =>
+        p.module === "emergency" &&
+        p.category === category &&
+        (!onlyHelp || p.type === "help") &&
+        matches(p, search),
+    ),
+  );
+  const list = useListing(
+    "post",
+    {
+      barrio_id: barrio,
+      module: "emergency",
+      category: category || "all",
+      type: onlyHelp ? "help" : "all",
+      search,
+    },
+    localRows,
+    !!category,
+  );
+  const rows = list.rows;
   if (!category)
     return (
       <Page
@@ -638,15 +691,6 @@ export function EmergencyScreen() {
         </Button>
       </Page>
     );
-  const rows = fresh(
-    publicRows(data.posts, barrio).filter(
-      (p) =>
-        p.module === "emergency" &&
-        p.category === category &&
-        (!onlyHelp || p.type === "help") &&
-        matches(p, search),
-    ),
-  );
   return (
     <Page
       back
@@ -746,7 +790,8 @@ export function EmergencyScreen() {
           <ItemCard key={p.id} item={p} />
         ))}
       </CardGrid>
-      {!rows.length && (
+      <ListingStatus list={list} />
+      {!rows.length && !list.loading && !list.error && (
         <Empty
           action="Solicitar apoyo"
           onPress={() =>

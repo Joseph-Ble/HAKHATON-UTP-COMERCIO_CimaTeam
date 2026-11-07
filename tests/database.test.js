@@ -1,54 +1,10 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import fs from "node:fs/promises";
-import { PGlite } from "@electric-sql/pglite";
-import { createSeed, IDS } from "../src/data/seed.js";
+import { IDS } from "../src/data/seed.js";
+import { createTestDatabase } from "./helpers/database.js";
 
 test("PostgreSQL migration, RPC and RLS enforce the security boundary", async (t) => {
-  const db = new PGlite();
-  await db.exec(
-    `create role anon; create role authenticated; create schema auth; create table auth.users(id uuid primary key, raw_user_meta_data jsonb); create function auth.uid() returns uuid language sql stable as $$ select nullif(current_setting('request.jwt.claim.sub',true),'')::uuid $$; grant usage on schema auth,public to anon,authenticated; grant execute on function auth.uid() to anon,authenticated;`,
-  );
-  await db.exec(
-    await fs.readFile(
-      new URL(
-        "../supabase/migrations/202611070001_initial.sql",
-        import.meta.url,
-      ),
-      "utf8",
-    ),
-  );
-  await db.exec(
-    await fs.readFile(
-      new URL(
-        "../supabase/migrations/202611070002_editorial.sql",
-        import.meta.url,
-      ),
-      "utf8",
-    ),
-  );
-  const seed = createSeed();
-  for (const p of seed.profiles)
-    await db.query(
-      "insert into auth.users(id,raw_user_meta_data) values($1,$2::jsonb)",
-      [p.id, JSON.stringify({ ...p, role: "moderator" })],
-    );
-  for (const table of [
-    "user_roles",
-    "businesses",
-    "posts",
-    "reviews",
-    "offers",
-  ]) {
-    const rows = table === "user_roles" ? seed.roles : seed[table];
-    for (const row of rows) {
-      const entries = Object.entries(row);
-      await db.query(
-        `insert into public.${table}(${entries.map(([k]) => k).join(",")}) values(${entries.map((_, i) => "$" + (i + 1)).join(",")})`,
-        entries.map(([, v]) => v),
-      );
-    }
-  }
+  const { db, seed } = await createTestDatabase();
   const as = async (id) => {
     await db.exec("reset role");
     await db.query("select set_config('request.jwt.claim.sub',$1,false)", [
@@ -65,6 +21,80 @@ test("PostgreSQL migration, RPC and RLS enforce the security boundary", async (t
   };
   const rows = async (sql) => (await db.query(sql)).rows;
   let businessId, helpId, offerId;
+  const read = async (name, args, params) =>
+    (await db.query(`select public.${name}(${args}) as data`, params)).rows[0]
+      .data;
+  await t.test(
+    "server listing pages, text search and direct details enforce RLS",
+    async () => {
+      await as(null);
+      const first = await read("get_listing", "$1,$2::jsonb,$3,$4", [
+        "business",
+        JSON.stringify({ barrio_id: "san-miguel" }),
+        0,
+        2,
+      ]);
+      const second = await read("get_listing", "$1,$2::jsonb,$3,$4", [
+        "business",
+        JSON.stringify({ barrio_id: "san-miguel" }),
+        1,
+        2,
+      ]);
+      assert.equal(first.items.length, 2);
+      assert.equal(first.has_more, true);
+      assert.equal(second.items.length, 1);
+      assert.equal(second.has_more, false);
+      assert.equal(
+        new Set([...first.items, ...second.items].map((r) => r.id)).size,
+        3,
+      );
+      const search = await read("get_listing", "$1,$2::jsonb,$3,$4", [
+        "business",
+        JSON.stringify({ barrio_id: "san-miguel", search: "GASFITERO" }),
+        0,
+        24,
+      ]);
+      assert.equal(search.items.length, 1);
+      const accented = await read("get_listing", "$1,$2::jsonb,$3,$4", [
+        "business",
+        JSON.stringify({ barrio_id: "san-miguel", search: "FERRETERÍAS" }),
+        0,
+        24,
+      ]);
+      assert.equal(accented.items.length, 1);
+      assert.equal(accented.items[0].category, "hardware");
+      const quoted = await read("get_listing", "$1,$2::jsonb,$3,$4", [
+        "business",
+        JSON.stringify({ barrio_id: "san-miguel", search: "' OR true --" }),
+        0,
+        24,
+      ]);
+      assert.equal(quoted.items.length, 0);
+      const detail = await read("get_item", "$1,$2,$3", [
+        "post",
+        seed.posts[7].id,
+        "san-miguel",
+      ]);
+      assert.equal(detail.offers.length, 0);
+      assert.equal(detail.contacts.length, 0);
+      await as(IDS.ana);
+      const own = await read("get_item", "$1,$2,$3", [
+        "post",
+        seed.posts[7].id,
+        "san-miguel",
+      ]);
+      assert.equal(own.offers.length, 1);
+      const context = await read("get_context", "$1", ["san-miguel"]);
+      assert.equal(
+        context.profiles.find((p) => p.id === IDS.ana).name,
+        "Ana Torres",
+      );
+      assert.equal(context.offers.length, 1);
+      await as(IDS.mod);
+      const mod = await read("get_context", "$1", ["san-miguel"]);
+      assert.equal(mod.offers.length, 0);
+    },
+  );
   await t.test(
     "visitors read public data but no private offers, contacts, roles or reports",
     async () => {

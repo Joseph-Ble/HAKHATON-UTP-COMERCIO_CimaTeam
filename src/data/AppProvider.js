@@ -24,9 +24,11 @@ function Provider({ children }) {
   const [user, setUser] = useState(null),
     [barrio, setBarrioState] = useState("san-miguel");
   const [notice, setNotice] = useState("");
+  const [authError, setAuthError] = useState("");
   const init = async () => {
     setBootError("");
     try {
+      repository.onAuthError = setAuthError;
       const me = await repository.init();
       setUser(me);
       const stored = await AsyncStorage.getItem("entrevecinos.barrio");
@@ -49,11 +51,15 @@ function Provider({ children }) {
     return () => clearTimeout(timer);
   }, [notice]);
   const query = useQuery({
-    queryKey: ["snapshot", user?.id || "visitor"],
-    queryFn: () => repository.snapshot(),
+    queryKey: ["snapshot", user?.id || "visitor", barrio],
+    queryFn: () => repository.snapshot(barrio),
     enabled: booted,
   });
   const refresh = async () => {
+    await Promise.all([
+      client.invalidateQueries({ queryKey: ["listing"] }),
+      client.invalidateQueries({ queryKey: ["detail"] }),
+    ]);
     const result = await query.refetch();
     if (result.error) throw result.error;
     return result.data;
@@ -64,6 +70,10 @@ function Provider({ children }) {
     success = "Guardado correctamente.",
   ) => {
     const id = await repository.command(action, payload);
+    await Promise.all([
+      client.invalidateQueries({ queryKey: ["listing"] }),
+      client.invalidateQueries({ queryKey: ["detail"] }),
+    ]);
     const result = await query.refetch();
     if (result.error) {
       setNotice(
@@ -148,6 +158,7 @@ function Provider({ children }) {
         mode: repository.mode,
         notice,
         setNotice,
+        authError,
         signIn: (...args) => authenticate("signIn", ...args),
         signUp: (...args) => authenticate("signUp", ...args),
         signOut: async () => {
@@ -156,6 +167,7 @@ function Provider({ children }) {
           setUser(null);
         },
         recover: (email) => repository.recover(email),
+        resetPassword: (password) => repository.resetPassword(password),
         moderator: data.roles.some(
           (r) => r.user_id === user?.id && r.role === "moderator",
         ),

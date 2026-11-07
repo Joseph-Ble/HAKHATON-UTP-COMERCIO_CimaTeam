@@ -1,6 +1,7 @@
 import "react-native-url-polyfill/auto";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Crypto from "expo-crypto";
+import * as Linking from "expo-linking";
 import { AppState, Platform } from "react-native";
 import { createClient, processLock } from "@supabase/supabase-js";
 import { pbkdf2Async } from "@noble/hashes/pbkdf2.js";
@@ -15,6 +16,8 @@ import {
 } from "../core/domain.js";
 import { createSeed, IDS, SEED_PASSWORD } from "./seed.js";
 import { sessionStorage } from "./sessionStorage.js";
+import { parseAuthLink } from "../core/authLinks.js";
+import { remoteError } from "../core/remoteErrors.js";
 
 const STORE_KEY = "entrevecinos.local.v1";
 const SESSION_KEY = "entrevecinos.session";
@@ -136,70 +139,115 @@ class LocalRepository {
 class RemoteRepository {
   mode = "remote";
   user = null;
+  authLinkError = "";
   async init() {
     check(
       url && key,
       "Configura tanto la URL como la clave publicable de Supabase.",
     );
     check(url.startsWith("https://"), "Supabase debe usar HTTPS.");
+    this.authSubscription?.unsubscribe();
+    this.linkSubscription?.remove();
+    this.appStateSubscription?.remove();
     this.client = createClient(url, key, {
       auth: {
         storage: sessionStorage,
         autoRefreshToken: true,
         persistSession: true,
         detectSessionInUrl: false,
+        flowType: "pkce",
         lock: processLock,
       },
     });
-    this.client.auth.onAuthStateChange((_event, session) => {
-      this.user = session?.user || null;
-      this.onAuthChange?.(this.user);
-    });
+    const { data: subscription } = this.client.auth.onAuthStateChange(
+      (_event, session) => {
+        this.user = session?.user || null;
+        this.onAuthChange?.(this.user);
+      },
+    );
+    this.authSubscription = subscription.subscription;
     if (Platform.OS !== "web")
-      AppState.addEventListener("change", (s) =>
+      this.appStateSubscription = AppState.addEventListener("change", (s) =>
         s === "active"
           ? this.client.auth.startAutoRefresh()
           : this.client.auth.stopAutoRefresh(),
       );
     const { data, error } = await this.client.auth.getSession();
-    if (error) throw error;
+    if (error) throw remoteError(error);
     this.user = data.session?.user || null;
+    const initial = await Linking.getInitialURL();
+    if (initial) await this.acceptAuthLink(initial);
+    this.linkSubscription = Linking.addEventListener(
+      "url",
+      ({ url: incoming }) => {
+        this.acceptAuthLink(incoming);
+      },
+    );
     return this.user;
   }
-  async snapshot() {
-    const tables = [
-      "profiles",
-      "businesses",
-      "posts",
-      "reviews",
-      "offers",
-      "responses",
-      "contacts",
-      "history",
-      "guidance",
-      "services",
-      "reports",
-    ];
-    const results = await Promise.all(
-      tables.map((table) => this.client.from(table).select("*").limit(500)),
+  async acceptAuthLink(incoming) {
+    const parsed = parseAuthLink(
+      incoming,
+      Platform.OS === "web" ? globalThis.location?.origin : null,
     );
-    const state = {};
-    results.forEach((r, i) => {
-      if (r.error)
-        throw new Error(`No se pudo cargar ${tables[i]}: ${r.error.message}`);
-      state[tables[i]] = r.data;
+    if (!parsed) return;
+    try {
+      if (parsed.error) throw new Error(parsed.error);
+      const result = parsed.code
+        ? await this.client.auth.exchangeCodeForSession(parsed.code)
+        : await this.client.auth.setSession({
+            access_token: parsed.accessToken,
+            refresh_token: parsed.refreshToken,
+          });
+      if (result.error) throw result.error;
+      this.user = result.data.user || result.data.session?.user || null;
+      this.authLinkError = "";
+      this.onAuthError?.("");
+      if (Platform.OS === "web")
+        globalThis.history?.replaceState(
+          globalThis.history.state,
+          "",
+          globalThis.location.pathname,
+        );
+    } catch {
+      this.authLinkError =
+        "No se pudo validar el enlace. Puede haber vencido o haberse abierto en otro dispositivo. Solicita uno nuevo.";
+      this.onAuthError?.(this.authLinkError);
+    }
+  }
+  async read(name, args) {
+    const { data, error } = await this.client.rpc(name, args);
+    if (error)
+      throw remoteError(
+        error,
+        "No se pudo cargar la información. Vuelve a intentarlo.",
+      );
+    return data;
+  }
+  async snapshot(barrio = "san-miguel") {
+    return this.read("get_context", { zone: barrio });
+  }
+  async list(scope, filters, page = 0) {
+    return this.read("get_listing", {
+      item_scope: scope,
+      filters,
+      page_index: page,
+      page_size: 24,
     });
-    const { data, error } = await this.client.from("user_roles").select("*");
-    if (error) throw error;
-    state.roles = data;
-    return state;
+  }
+  async detail(scope, id, barrio) {
+    return this.read("get_item", {
+      item_scope: scope,
+      item_id: id,
+      zone: barrio,
+    });
   }
   async signIn(email, password) {
     const { data, error } = await this.client.auth.signInWithPassword({
       email: email.trim(),
       password,
     });
-    if (error) throw error;
+    if (error) throw remoteError(error);
     this.user = data.user;
     return data.user;
   }
@@ -208,9 +256,12 @@ class RemoteRepository {
     const { data, error } = await this.client.auth.signUp({
       email: v.email,
       password: v.password,
-      options: { data: { name: v.name, barrio_id: v.barrio_id } },
+      options: {
+        emailRedirectTo: Linking.createURL("cuenta"),
+        data: { name: v.name, barrio_id: v.barrio_id },
+      },
     });
-    if (error) throw error;
+    if (error) throw remoteError(error);
     if (!data.session)
       throw new Error(
         "Cuenta creada. Revisa tu correo para confirmar el registro y luego inicia sesión.",
@@ -220,7 +271,7 @@ class RemoteRepository {
   }
   async signOut() {
     const { error } = await this.client.auth.signOut();
-    if (error) throw error;
+    if (error) throw remoteError(error);
     this.user = null;
   }
   async command(action, payload) {
@@ -228,15 +279,28 @@ class RemoteRepository {
       action_name: action,
       payload,
     });
-    if (error) throw new Error(error.message);
+    if (error) throw remoteError(error);
     return data;
   }
   async recover(email) {
     const { error } = await this.client.auth.resetPasswordForEmail(
       email.trim(),
+      { redirectTo: Linking.createURL("recuperar") },
     );
-    if (error) throw error;
-    return "Si existe una cuenta con ese correo, recibirás instrucciones. La URL de recuperación debe estar configurada en Supabase.";
+    if (error) throw remoteError(error);
+    return "Si existe una cuenta con ese correo, recibirás instrucciones para cambiar tu contraseña.";
+  }
+  async resetPassword(password) {
+    check(
+      password.length >= 8 && password.length <= 128,
+      "Usa una contraseña de 8 a 128 caracteres.",
+    );
+    const { error } = await this.client.auth.updateUser({ password });
+    if (error)
+      throw remoteError(
+        error,
+        "No se pudo cambiar la contraseña. Solicita un enlace nuevo.",
+      );
   }
 }
 export const repository =

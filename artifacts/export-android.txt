@@ -1,6 +1,6 @@
 Starting Metro Bundler
 
-Android Bundled 26043ms node_modules/expo-router/entry.js (3582 modules)
+Android Bundled 54724ms node_modules/expo-router/entry.js (3587 modules)
 
 › Assets (51):
 node_modules/@expo-google-fonts/dm-sans/100Thin_Italic/DMSans_100Thin_Italic.ttf (61KB)
@@ -44,7 +44,7 @@ node_modules/expo-router/assets/sitemap.png (465B)
 node_modules/expo-router/assets/unmatched.png (4.8KB)
 
 › android bundles (1):
-_expo/static/js/android/entry-148b4254208a791313ef28db39d08435.hbc (6.9MB)
+_expo/static/js/android/entry-d890720cf001ea6a1eb9b6845ea34eaa.hbc (7MB)
 
 › Files (1):
 metadata.json (3.4KB)

@@ -231,6 +231,30 @@ export const ErrorText = ({ children }) => (
     {children}
   </T>
 );
+export function ListingStatus({ list }) {
+  return (
+    <View style={{ gap: 12 }}>
+      {list.loading && <ActivityIndicator color={colors.green} />}
+      {!!list.error && (
+        <>
+          <ErrorText>{list.error}</ErrorText>
+          <Action variant="secondary" icon="RefreshCw" onPress={list.retry}>
+            Reintentar búsqueda
+          </Action>
+        </>
+      )}
+      {!!list.hasMore && (
+        <Action
+          loading={list.fetchingMore}
+          variant="secondary"
+          onPress={list.loadMore}
+        >
+          Ver más resultados
+        </Action>
+      )}
+    </View>
+  );
+}
 export function Chip({ children, selected, onPress, icon, color }) {
   return (
     <Pressable
@@ -550,7 +574,8 @@ export function Avatar({ name = "?", size = 40, color = colors.mint }) {
 export function ItemCard({ item, scope = "post", style }) {
   const { data, barrio } = useApp();
   const business = scope === "business";
-  const stats = reviewStats(data.reviews, scope, item.id, barrio);
+  const stats =
+    item._stats || reviewStats(data.reviews, scope, item.id, barrio);
   const color = business
     ? colors.mint
     : item.module === "emergency"

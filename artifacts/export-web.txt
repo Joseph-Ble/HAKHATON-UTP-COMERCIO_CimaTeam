@@ -1,10 +1,6 @@
-
-> entrevecinos@1.0.0 export:web
-> expo export --platform web
-
 Starting Metro Bundler
 
-Web Bundled 1237ms node_modules/expo-router/entry.js (3146 modules)
+Web Bundled 904ms node_modules/expo-router/entry.js (3151 modules)
 
 › Assets (43):
 node_modules/@expo-google-fonts/dm-sans/100Thin_Italic/DMSans_100Thin_Italic.bcb8399c1cd3b407c9403b6738c0279f.ttf (61KB)
@@ -45,24 +41,25 @@ node_modules/expo-router/assets/react-navigation/elements/search-icon.286d67d3f7
 node_modules/expo-router/assets/sitemap.412dd9275b6b48ad28f5e3d81bb1f626.png (465B)
 node_modules/expo-router/assets/unmatched.20e71bdf79e3a97bf55fd9e164041578.png (4.8KB)
 
-› web bundles (17):
-_expo/static/js/web/__common-9b22554a8e309d110cfe55e0d8196efa.js (3.7MB)
+› web bundles (18):
+_expo/static/js/web/__common-787facb9b09877cd795ec3311f0bc187.js (3.7MB)
 _expo/static/js/web/__expo-metro-runtime-8c088df87a31e4e6accd81c554ec290d.js (3.8KB)
-_expo/static/js/web/_layout-21ef102164168abba518dadf712d7953.js (40KB)
-_expo/static/js/web/[id]-11b6e8c5691743e13bbf84aabd557e57.js (280B)
-_expo/static/js/web/[id]-47644e2646c5159dd6d84712b9deb3e0.js (276B)
-_expo/static/js/web/+not-found-b6f3f367b0e7bc68991d6efaeb271a21.js (469B)
-_expo/static/js/web/actividad-e6e0c77006bdbb6062720c1716713911.js (207B)
-_expo/static/js/web/ajustes-ffa7fe4aa7cc08575db4efa3ff6d6103.js (207B)
-_expo/static/js/web/crear-8eaed872d263471e692a50645f92f142.js (57KB)
-_expo/static/js/web/cuenta-d57b07ce57334cfa74ae8acadac6b1f9.js (206B)
-_expo/static/js/web/directorio-967666c144e91c994ef176d8a0094793.js (206B)
-_expo/static/js/web/emergencias-b632e7e2d60288d8a3b83ccbc64727f8.js (208B)
-_expo/static/js/web/entry-fc93c6de5be2bfd4259d9aa226e5bd27.js (1.1MB)
-_expo/static/js/web/index-17ac9dc296cbf6b7ba8b6c09c873e1a8.js (203B)
-_expo/static/js/web/local-214b2179602e050317c348aa6af278b8.js (204B)
-_expo/static/js/web/moderacion-26ca91643cb0a3031db01551331e1ab7.js (4.6KB)
-_expo/static/js/web/solidaria-a7ddd56c57db1b3cf4ba2bd0a787d06c.js (209B)
+_expo/static/js/web/_layout-496417cede0deb2487c04aeb727712b7.js (40KB)
+_expo/static/js/web/[id]-b47349bdabfa97c8d8311e235a2c9629.js (276B)
+_expo/static/js/web/[id]-fc641be71415b6e68164b83308387476.js (280B)
+_expo/static/js/web/+not-found-c6f724a6d4ca6bce8b6b4f4f7e698811.js (469B)
+_expo/static/js/web/actividad-56cb025e4766a3a3ceaa0a5424144218.js (207B)
+_expo/static/js/web/ajustes-de1109c3c5246307062c2f9c1dbc2abc.js (207B)
+_expo/static/js/web/crear-fa97f6cc40c3aaa0e1a5b294bddd6387.js (57KB)
+_expo/static/js/web/cuenta-77cdbe30dc6ff8c165614ce6188504ad.js (206B)
+_expo/static/js/web/directorio-efdf66b78312350ee9fffbe98401ca26.js (206B)
+_expo/static/js/web/emergencias-0eae8b3e583852900a9fdefbe1be4f2d.js (208B)
+_expo/static/js/web/entry-394f3788df2eda0bbedabff4f7d7a6b4.js (1.1MB)
+_expo/static/js/web/index-4fb6f19fe0347a45370ed8bcecf230c1.js (203B)
+_expo/static/js/web/local-8359b9c8e62e21a3543c50dcc5632e10.js (204B)
+_expo/static/js/web/moderacion-db81c78726410e7dd844433b5d2273d6.js (4.6KB)
+_expo/static/js/web/recuperar-28a55ccbc1a9ef88a2a77cd4bc1a27c1.js (2KB)
+_expo/static/js/web/solidaria-c7e87604a247ebb478bfa888677356e8.js (209B)
 
 › Files (3):
 favicon.ico (15KB)

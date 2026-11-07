@@ -36,6 +36,7 @@ yarn-error.*
 .env.*
 !.env.example
 artifacts/browser-tests/
+artifacts/browser-remote-tests/
 test-results/
 playwright-report/
 artifacts/*.apk
@@ -44,6 +45,7 @@ artifacts/*.zip
 artifacts/commits.txt
 artifacts/paquetes.sha256
 artifacts/android-bundle/
+artifacts/remote-test-bundle/
 
 # typescript
 *.tsbuildinfo

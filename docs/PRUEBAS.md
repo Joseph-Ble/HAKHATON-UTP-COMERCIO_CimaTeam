@@ -1,6 +1,8 @@
 Estado comprobado de EntreVecinos 1.0.0
 
-La implementación funcional está preparada en JavaScript/Expo con persistencia local y adaptador Supabase. Se ejecutaron 20 pruebas de reglas y PostgreSQL, seis recorridos principales de navegador y un recorrido adicional de edición/contacto/coordinación. Todos esos casos pasaron. Tras ajustar la portada móvil se repitió únicamente la comprobación de navegación, búsqueda, barrio y tamaño móvil; pasó.
+La implementación funcional está preparada en JavaScript/Expo con persistencia local y adaptador Supabase. Se ejecutaron 26 pruebas de reglas, PostgreSQL, enlaces de autenticación y errores. Pasaron los siete recorridos locales de interfaz contra la exportación web de producción. También pasaron dos recorridos del adaptador remoto con peticiones interceptadas y PostgreSQL de pruebas: búsqueda/paginación/ficha directa entre más de 500 registros y recuperación de contraseña con Auth simulado.
+
+En esta continuación se corrigió el inicio para que las publicaciones nuevas aparezcan antes que las antiguas. El recorrido solidario comprueba que una publicación recién creada aparece en la portada. La búsqueda remota normaliza mayúsculas y tildes e incluye las categorías en español; el cliente evita duplicar tarjetas al juntar páginas.
 
 La exportación web de producción se abrió con Chromium y permitió iniciar sesión, sin errores de página o consola en ese recorrido. La exportación Android generó bytecode Hermes; esto acredita la compilación del código JavaScript para Android, no una APK instalable ni su funcionamiento en un dispositivo.
 
@@ -18,7 +20,7 @@ Se necesita habilitar `repo.reactnative.dev` en la configuración de red del ent
 | --- | --------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | A01 | Navegación web aprobada; Android pendiente                      | Tres módulos reales, regreso y portada móvil. No hay instalación Android.                                                                                             |
 | A02 | Aprobado en local/web                                           | Cambio de San Miguel a Pueblo Libre filtra negocios; el filtro no altera la identidad del perfil.                                                                     |
-| A03 | Búsqueda aprobada en local/web                                  | Búsqueda de gasfitero y datos persistidos; categorías disponibles.                                                                                                    |
+| A03 | Aprobado en local/web y adaptador remoto de pruebas             | Búsqueda de gasfitero, categorías, paginación y ficha fuera del conjunto inicial.                                                                                     |
 | A04 | Aprobado en local/web y PostgreSQL embebido                     | Alta con Ana, consulta con Luis, edición propia y rechazo de edición ajena.                                                                                           |
 | A05 | Aprobado en local/web y PostgreSQL embebido                     | Rango, promedio, unicidad, autorreseña y barrio histórico.                                                                                                            |
 | A06 | Aprobado en local/web                                           | Venta consultable y creación de oferta con persistencia.                                                                                                              |
@@ -37,12 +39,15 @@ Se necesita habilitar `repo.reactnative.dev` en la configuración de red del ent
 
 Las pruebas PostgreSQL ejecutan las migraciones con PGlite y roles `anon`/`authenticated`, usando una función mínima `auth.uid()`. Comprueban permisos y lógica SQL reales; no prueban el proveedor Auth, correo, transporte HTTP ni una instalación Supabase real. La conexión remota permanece sin configurar por decisión del usuario.
 
+Las pruebas del adaptador remoto utilizan el SDK Supabase real y un bundle compilado con URL/clave públicas sintéticas. Playwright intercepta todas las peticiones a supabase.example.test: las lecturas se ejecutan contra PostgreSQL local con RLS y Auth se simula. Se confirma el intercambio de código, la actualización de contraseña y el cierre de sesión a nivel de cliente. No se enviaron correos, validaron firmas de tokens reales ni crearon recursos externos. El bundle de pruebas no se incluye en la entrega.
+
 Las pruebas de interfaz se ejecutaron en Chromium mediante el destino web de React Native, con una resolución móvil de 390×844 y escritorio. No equivalen a probar Android nativo. Las fechas y marcas temporales se generan y muestran con las reglas de la app; los incidentes ilustrativos están archivados.
 
 | Archivo                                                                   | Contenido                                                             |
 | ------------------------------------------------------------------------- | --------------------------------------------------------------------- |
-| `artifacts/pruebas-unitarias.txt`                                         | 20 pruebas aprobadas: reglas de negocio y migraciones/RLS/RPC.        |
-| `artifacts/pruebas-navegador.txt`                                         | Seis recorridos principales aprobados.                                |
+| `artifacts/pruebas-unitarias.txt`                                         | 26 pruebas aprobadas: negocio, SQL/RLS/RPC, enlaces y errores.        |
+| `artifacts/pruebas-navegador.txt`                                         | Siete recorridos locales aprobados contra producción web.             |
+| `artifacts/pruebas-adaptador-remoto.txt`                                  | Dos recorridos con SDK Supabase, PostgreSQL local y Auth simulado.    |
 | `artifacts/pruebas-contacto.txt`                                          | Edición, consentimiento, revocación y coordinación privada aprobados. |
 | `artifacts/pruebas-mobile.txt`                                            | Revisión posterior de la portada móvil.                               |
 | `artifacts/export-web.txt`                                                | Exportación de producción web.                                        |

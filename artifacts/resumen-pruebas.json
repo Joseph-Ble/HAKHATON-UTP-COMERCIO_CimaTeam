@@ -1,25 +1,30 @@
 {
-  "business_rules_and_postgres": {
-    "passed": 20,
+  "business_rules_postgres_and_auth_links": {
+    "passed": 26,
     "failed": 0,
     "evidence": "pruebas-unitarias.txt"
   },
-  "browser_workflows": {
+  "local_browser_workflows": {
     "passed": 7,
     "failed": 0,
-    "evidence": [
-      "pruebas-navegador.txt",
-      "pruebas-contacto.txt"
-    ]
+    "mode": "production web",
+    "evidence": "pruebas-navegador.txt"
   },
-  "mobile_layout_after_adjustment": {
-    "passed": 1,
-    "evidence": "pruebas-mobile.txt"
+  "remote_adapter_workflows": {
+    "passed": 2,
+    "failed": 0,
+    "auth": "simulated",
+    "database": "local PostgreSQL/PGlite with RLS",
+    "evidence": "pruebas-adaptador-remoto.txt"
   },
   "production_web_smoke": {
+    "productionWeb": "passed",
     "login": "passed",
-    "page_errors": []
+    "deliveryDataMode": "local",
+    "syntheticBackendAbsent": true,
+    "pageErrors": []
   },
   "supabase_live": "not_configured",
+  "android_js_export": "passed",
   "android_apk": "blocked: repo.reactnative.dev denied by environment network policy"
 }

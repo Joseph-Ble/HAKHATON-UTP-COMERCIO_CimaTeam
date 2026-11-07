@@ -4,7 +4,7 @@ export default defineConfig({
   timeout: 90000,
   workers: 1,
   use: {
-    baseURL: "http://localhost:8081",
+    baseURL: process.env.VECINOS_TEST_BASE_URL || "http://localhost:8081",
     viewport: { width: 1280, height: 950 },
     trace: "retain-on-failure",
     screenshot: "only-on-failure",
@@ -15,7 +15,14 @@ export default defineConfig({
   },
   reporter: [
     ["list"],
-    ["json", { outputFile: "artifacts/playwright-results.json" }],
+    [
+      "json",
+      {
+        outputFile:
+          process.env.VECINOS_TEST_REPORT ||
+          "artifacts/playwright-results.json",
+      },
+    ],
   ],
-  outputDir: "artifacts/browser-tests",
+  outputDir: process.env.VECINOS_TEST_OUTPUT || "artifacts/browser-tests",
 });

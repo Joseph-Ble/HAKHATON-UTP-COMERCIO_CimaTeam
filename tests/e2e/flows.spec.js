@@ -261,6 +261,13 @@ test("A06–A09: sell, buy, swap and free help plus solidarity review", async ({
     await expect(page.getByRole("heading", { name: title })).toBeVisible();
     if (type === "swap") swapURL = page.url();
   }
+  await page.goto("/");
+  await expect(
+    page.getByRole("button", {
+      name: "Necesito una escalera por la tarde",
+      exact: true,
+    }),
+  ).toBeVisible();
   await page.goto(swapURL);
   await page
     .getByRole("button", { name: "Marcar como finalizada", exact: true })

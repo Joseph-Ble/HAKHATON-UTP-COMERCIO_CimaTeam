@@ -37,8 +37,8 @@ Las estrellas no aparecen en emergencias. Las opiniones no certifican calidad ni
 
 **Conectar Supabase después.** La instalación actual puede funcionar enteramente en local. Para compartir datos:
 
-1. Crea un proyecto Supabase dedicado. Aplica, en orden, los SQL de `supabase/migrations/` mediante SQL Editor o el flujo de migraciones de Supabase CLI. La primera migración crea tablas, RLS, restricciones, trigger de perfil y el límite de escritura `app_command`; la segunda carga orientación editorial con fuentes.
-2. Activa correo/contraseña en Auth y configura confirmación de correo, entrega y URLs de recuperación según tu entorno. Prueba registro, confirmación y recuperación antes de usarlos con vecinos reales. Las cuentas del modo local no se migran automáticamente.
+1. Crea un proyecto Supabase dedicado. Aplica, en orden, todos los SQL de `supabase/migrations/` mediante SQL Editor o Supabase CLI. La primera migración crea tablas, RLS, restricciones, trigger de perfil y `app_command`; la segunda carga orientación editorial; la tercera añade lecturas paginadas, búsqueda, consulta directa de fichas y el contexto de la cuenta.
+2. Activa correo/contraseña en Auth y configura confirmación de correo y entrega. En Auth → URL Configuration, autoriza los destinos de tu aplicación: `entrevecinos:///cuenta`, `entrevecinos:///recuperar` y las URL equivalentes de tu dominio web. Incluye las variantes de dos barras si el dispositivo las utiliza. La app utiliza PKCE: solicita y abre el enlace de recuperación desde la misma instalación/navegador. Prueba registro, confirmación y recuperación antes de usarlos con vecinos reales. Las cuentas locales no se migran automáticamente.
 3. Copia `.env.example` a `.env` y configura exclusivamente `EXPO_PUBLIC_SUPABASE_URL` y `EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY`. La clave publicable es apropiada para clientes; las políticas de servidor son obligatorias.
 4. Reinicia Metro con caché limpia (`npx expo start -c`) o recompila la APK. Las variables `EXPO_PUBLIC_*` se incorporan al bundle; una APK ya instalada no cambia de backend por editar un archivo del ordenador.
 5. Registra dos cuentas y verifica los flujos desde sesiones/dispositivos independientes. Concede moderación desde SQL administrativo, usando el UUID de la cuenta autorizada:
@@ -52,7 +52,9 @@ Nadie puede asignarse roles modificando su perfil. El APK nunca debe incluir una
 
 Para cargar ejemplos en un proyecto remoto NUEVO de pruebas se proporciona `scripts/seed-supabase.mjs`. Tras aplicar migraciones, configura la clave administrativa solo en tu entorno local y ejecuta explícitamente `node --env-file=.env scripts/seed-supabase.mjs --examples`. El script rechaza proyectos con negocios existentes y no se ha ejecutado contra ningún servicio remoto. No distribuyas las cuentas conocidas en un servicio público.
 
-El adaptador remoto no cambia silenciosamente a almacenamiento local si hay errores de red. Mostrará los errores y no afirmará que publicó sin confirmación. La carga remota inicial está limitada a 500 registros por tabla: esta primera implementación está pensada para un piloto pequeño; para ampliar la comunidad debe añadirse paginación de listados y búsqueda remota. Realtime no es necesario para la coordinación actual: se actualiza al entrar, después de guardar y mediante Actualizar.
+El adaptador remoto no cambia a almacenamiento local si hay errores de red. Mostrará errores comprensibles y no afirmará que publicó sin confirmación. Los listados remotos consultan filtros y texto en PostgreSQL y cargan páginas de 24 resultados con «Ver más». Una ficha se consulta por identificador, aunque no esté en el inicio. Se eliminó el límite anterior de 500 registros por tabla. La carga de inicio contiene una selección pequeña de publicaciones públicas y la actividad privada de la cuenta según RLS; las opiniones e historial de cada ficha se consultan al abrirla. Realtime no es necesario para la coordinación actual: se actualiza al entrar, después de guardar y mediante Actualizar.
+
+La recuperación de contraseña incluye solicitud del correo, recepción de enlace/code PKCE, pantalla de nueva contraseña y cierre de sesión. Las rutas de autenticación ignoran dominios ajenos y no muestran tokens ni mensajes técnicos del proveedor. La entrega real del correo y el comportamiento del enlace en Android deben verificarse una vez configurado Supabase y generado el APK.
 
 **Compilar e instalar Android.** Se incluye un perfil `preview` de EAS que genera APK de distribución interna con JavaScript incorporado:
 
@@ -82,6 +84,19 @@ npm run export:web
 ```
 
 Las pruebas SQL usan PostgreSQL embebido PGlite y una emulación mínima de `auth.uid()`/roles de Supabase. Ejecutan la migración y prueban RPC/RLS; no equivalen a probar Auth, red, correo o despliegue de un Supabase real. Los recorridos Playwright usan Chromium (`CHROMIUM_PATH` configurable) y el mismo código React Native para web; la verificación Android se registra por separado.
+
+Para probar la exportación web de producción, ejecuta `npm run export:web`, sirve `dist` con `python scripts/serve-web.py` y utiliza `VECINOS_TEST_BASE_URL=http://localhost:8082 npm run test:e2e -- tests/e2e/flows.spec.js`.
+
+Se incluyen además dos recorridos del adaptador remoto con el SDK Supabase real, peticiones interceptadas y PostgreSQL local: búsqueda/paginación sobre más de 500 registros y recuperación de contraseña. El proveedor Auth y el correo son simulados; no se crea ninguna cuenta externa. Para repetirlos:
+
+```sh
+EXPO_PUBLIC_SUPABASE_URL=https://supabase.example.test EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY=sb_publishable_synthetic_test_only npx expo export --platform web --output-dir artifacts/remote-test-bundle
+python scripts/serve-web.py --port 8083 --directory artifacts/remote-test-bundle
+# En otra terminal, con el servidor activo:
+VECINOS_REMOTE_TEST_URL=http://localhost:8083 VECINOS_TEST_OUTPUT=artifacts/browser-remote-tests VECINOS_TEST_REPORT=artifacts/playwright-remote-results.json npm run test:e2e -- tests/e2e/remote.spec.js
+```
+
+El bundle sintético de pruebas queda separado y excluido de los paquetes de entrega. `VECINOS_TEST_REPORT` y `VECINOS_TEST_OUTPUT` permiten separar las evidencias de cada ejecución. Los dos casos remotos se omiten en una ejecución habitual si no se indica `VECINOS_REMOTE_TEST_URL`.
 
 | Carpeta                | Contenido                                                         |
 | ---------------------- | ----------------------------------------------------------------- |

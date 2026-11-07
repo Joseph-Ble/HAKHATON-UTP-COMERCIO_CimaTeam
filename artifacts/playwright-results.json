@@ -4,8 +4,7 @@
       "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
       "/workspace/HAKHATON-UTP-COMERCIO_CimaTeam/node_modules/.bin/playwright",
       "test",
-      "--grep",
-      "public browsing"
+      "tests/e2e/flows.spec.js"
     ],
     "configFile": "/workspace/HAKHATON-UTP-COMERCIO_CimaTeam/playwright.config.js",
     "rootDir": "/workspace/HAKHATON-UTP-COMERCIO_CimaTeam/tests/e2e",
@@ -57,7 +56,7 @@
         "testMatch": "**/*.@(spec|test).?(c|m)[jt]s?(x)",
         "timeout": 90000,
         "use": {
-          "baseURL": "http://localhost:8081",
+          "baseURL": "http://localhost:8082",
           "viewport": {
             "width": 1280,
             "height": 950
@@ -110,6 +109,40 @@
       "line": 0,
       "specs": [
         {
+          "title": "author editing, consent withdrawal and private coordination without a phone",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 11726,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-07T10:56:49.891Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "50593df043d465c1094d-5fe98344d5d080ac1ea2",
+          "file": "flows.spec.js",
+          "line": 3,
+          "column": 1
+        },
+        {
           "title": "A01–A03: public browsing, search, neighborhoods and a mobile layout",
           "ok": true,
           "tags": [],
@@ -125,12 +158,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 5255,
+                  "duration": 3422,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-07T06:01:34.071Z",
+                  "startTime": "2026-11-07T10:57:01.912Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -142,15 +175,185 @@
           "file": "flows.spec.js",
           "line": 79,
           "column": 1
+        },
+        {
+          "title": "A04–A05/A14: business ownership, review, reporting and moderation",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 11331,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-07T10:57:05.351Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "50593df043d465c1094d-20915207e3c28a69f31d",
+          "file": "flows.spec.js",
+          "line": 119,
+          "column": 1
+        },
+        {
+          "title": "A12–A13: create help, offer, accept, reply and close with persisted history",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 10048,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-07T10:57:16.700Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "50593df043d465c1094d-66613160f0809e608f7c",
+          "file": "flows.spec.js",
+          "line": 182,
+          "column": 1
+        },
+        {
+          "title": "A06–A09: sell, buy, swap and free help plus solidarity review",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 10259,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-07T10:57:26.763Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "50593df043d465c1094d-1d8dd9df208e2dd328ab",
+          "file": "flows.spec.js",
+          "line": 241,
+          "column": 1
+        },
+        {
+          "title": "A10–A11/A17: official content precedes reports and emergencies have no stars",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3331,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-07T10:57:37.039Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "50593df043d465c1094d-b1c96bc717df993f5189",
+          "file": "flows.spec.js",
+          "line": 297,
+          "column": 1
+        },
+        {
+          "title": "registration, login persistence, author edits and safe input errors",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 4467,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-07T10:57:40.388Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "50593df043d465c1094d-9a21db8ee943f4026f8a",
+          "file": "flows.spec.js",
+          "line": 326,
+          "column": 1
         }
       ]
     }
   ],
   "errors": [],
   "stats": {
-    "startTime": "2026-11-07T06:01:33.655Z",
-    "duration": 6072.109,
-    "expected": 1,
+    "startTime": "2026-11-07T10:56:49.415Z",
+    "duration": 55551.022,
+    "expected": 7,
     "skipped": 0,
     "unexpected": 0,
     "flaky": 0

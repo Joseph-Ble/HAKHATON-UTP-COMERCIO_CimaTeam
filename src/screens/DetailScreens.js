@@ -23,6 +23,7 @@ import {
   openURL,
 } from "../components/ui.js";
 import { useApp } from "../data/AppProvider.js";
+import { useItem } from "../data/useReadModels.js";
 import {
   TYPES,
   STATES,
@@ -191,15 +192,29 @@ export function ResponseRow({ response }) {
 export function DetailScreen({ scope }) {
   const { id } = useLocalSearchParams();
   const app = useApp();
-  const { data, user, barrio, command } = app;
+  const { user, barrio, command } = app;
+  const detail = useItem(scope, id);
+  const { data, item } = detail;
   const [sheet, setSheet] = useState(null),
     [message, setMessage] = useState(""),
     [rating, setRating] = useState(5),
     [recommends, setRecommends] = useState(true);
   const business = scope === "business";
-  const item = (business ? data.businesses : data.posts).find(
-    (p) => p.id === id && !p.deleted_at,
-  );
+  if (detail.loading)
+    return (
+      <Page back>
+        <T>Cargando publicación…</T>
+      </Page>
+    );
+  if (detail.error)
+    return (
+      <Page back>
+        <Info>{detail.error}</Info>
+        <Action variant="secondary" onPress={app.refresh}>
+          Reintentar
+        </Action>
+      </Page>
+    );
   if (!item)
     return (
       <Page back>
@@ -217,7 +232,7 @@ export function DetailScreen({ scope }) {
   const reviews = data.reviews.filter(
     (r) => r.scope === scope && r.entity_id === id,
   );
-  const stats = reviewStats(data.reviews, scope, id, barrio);
+  const stats = item._stats || reviewStats(data.reviews, scope, id, barrio);
   const contacts = data.contacts.filter(
     (c) => c.scope === scope && c.entity_id === id,
   );

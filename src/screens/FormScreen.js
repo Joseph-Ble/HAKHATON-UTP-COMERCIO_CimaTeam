@@ -15,6 +15,7 @@ import {
   colors,
 } from "../components/ui.js";
 import { useApp } from "../data/AppProvider.js";
+import { useItem } from "../data/useReadModels.js";
 import { businessSchema, postSchema } from "../core/domain.js";
 import {
   CATEGORIES,
@@ -26,12 +27,11 @@ import { SignInPrompt } from "./DetailScreens.js";
 
 export function FormScreen() {
   const params = useLocalSearchParams();
-  const { data, user, barrio, command } = useApp();
+  const { user, barrio, command } = useApp();
   const scope = params.scope === "business" ? "business" : "post";
   const business = scope === "business";
-  const existing = (business ? data.businesses : data.posts).find(
-    (p) => p.id === params.id,
-  );
+  const detail = useItem(scope, params.id);
+  const { data, item: existing } = detail;
   const [error, setError] = useState(""),
     [busy, setBusy] = useState(false);
   const {
@@ -158,6 +158,18 @@ export function FormScreen() {
         <Button onPress={() => router.push("/cuenta")}>
           Ingresar o crear cuenta
         </Button>
+      </Page>
+    );
+  if (params.id && detail.loading)
+    return (
+      <Page back>
+        <T>Cargando publicación…</T>
+      </Page>
+    );
+  if (params.id && detail.error)
+    return (
+      <Page back>
+        <ErrorText>{detail.error}</ErrorText>
       </Page>
     );
   if (params.id && (!existing || existing.author_id !== user.id))

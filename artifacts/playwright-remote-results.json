@@ -1,0 +1,200 @@
+{
+  "config": {
+    "argv": [
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+      "/workspace/HAKHATON-UTP-COMERCIO_CimaTeam/node_modules/.bin/playwright",
+      "test",
+      "tests/e2e/remote.spec.js"
+    ],
+    "configFile": "/workspace/HAKHATON-UTP-COMERCIO_CimaTeam/playwright.config.js",
+    "rootDir": "/workspace/HAKHATON-UTP-COMERCIO_CimaTeam/tests/e2e",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "/workspace/HAKHATON-UTP-COMERCIO_CimaTeam/artifacts/browser-remote-tests",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "",
+        "name": "",
+        "testDir": "/workspace/HAKHATON-UTP-COMERCIO_CimaTeam/tests/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 90000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "/workspace/HAKHATON-UTP-COMERCIO_CimaTeam/artifacts/browser-remote-tests",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "",
+        "testDir": "/workspace/HAKHATON-UTP-COMERCIO_CimaTeam/tests/e2e",
+        "snapshotDir": "/workspace/HAKHATON-UTP-COMERCIO_CimaTeam/tests/e2e",
+        "testIgnore": [],
+        "testMatch": "**/*.@(spec|test).?(c|m)[jt]s?(x)",
+        "timeout": 90000,
+        "use": {
+          "baseURL": "http://localhost:8081",
+          "viewport": {
+            "width": 1280,
+            "height": 950
+          },
+          "trace": "retain-on-failure",
+          "screenshot": "only-on-failure",
+          "launchOptions": {
+            "executablePath": "/usr/bin/chromium",
+            "args": [
+              "--no-sandbox",
+              "--disable-dev-shm-usage"
+            ]
+          }
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": ""
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "artifacts/playwright-remote-results.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.65.0",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "remote.spec.js",
+      "file": "remote.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "remote adapter with simulated Auth and real PostgreSQL reads",
+          "file": "remote.spec.js",
+          "line": 8,
+          "column": 6,
+          "specs": [
+            {
+              "title": "search, pagination and direct access reach items beyond the initial home feed",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 7326,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-07T10:59:44.803Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "32940b33799e1cb2aba7-17433b1c19910650a7d4",
+              "file": "remote.spec.js",
+              "line": 140,
+              "column": 3
+            },
+            {
+              "title": "password recovery exchanges a code, updates the password and signs out",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 4562,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-07T10:59:52.420Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "32940b33799e1cb2aba7-cbc3482df0239e3b8373",
+              "file": "remote.spec.js",
+              "line": 168,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-11-07T10:59:44.384Z",
+    "duration": 12692.822,
+    "expected": 2,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

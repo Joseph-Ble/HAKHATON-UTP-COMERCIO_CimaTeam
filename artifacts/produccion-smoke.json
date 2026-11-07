@@ -1,7 +1,7 @@
 {
   "productionWeb": "passed",
-  "mobileViewport": "390x844",
-  "buyToOffers": "passed",
-  "categoryFilter": "passed",
+  "login": "passed",
+  "deliveryDataMode": "local",
+  "syntheticBackendAbsent": true,
   "pageErrors": []
 }
