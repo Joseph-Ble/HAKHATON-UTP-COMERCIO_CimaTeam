@@ -3,6 +3,7 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 : "${ANDROID_HOME:?Configura ANDROID_HOME con tu Android SDK}"
 export EXPO_NO_TELEMETRY=1
+export EXPO_OFFLINE="${EXPO_OFFLINE:-1}"
 npx expo prebuild --platform android --no-install
 printf 'sdk.dir=%s\n' "$ANDROID_HOME" > android/local.properties
 cd android

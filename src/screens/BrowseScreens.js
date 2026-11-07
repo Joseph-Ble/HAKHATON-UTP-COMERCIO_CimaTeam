@@ -56,14 +56,14 @@ export function HomeScreen() {
       <View
         style={{
           flexDirection: wide ? "row" : "column",
-          padding: wide ? 36 : 24,
+          padding: wide ? 36 : 22,
           borderRadius: 24,
           backgroundColor: "#E9F0E3",
           gap: 12,
           overflow: "hidden",
         }}
       >
-        <View style={{ flex: 1, gap: 18 }}>
+        <View style={{ flex: 1, gap: wide ? 18 : 12 }}>
           <Row>
             <View
               style={{
@@ -88,7 +88,7 @@ export function HomeScreen() {
               accessibilityRole="header"
               style={{
                 fontFamily: fonts.title,
-                fontSize: wide ? 49 : 38,
+                fontSize: wide ? 49 : 32,
                 letterSpacing: -2,
               }}
             >
@@ -97,7 +97,7 @@ export function HomeScreen() {
             <T
               style={{
                 fontFamily: fonts.title,
-                fontSize: wide ? 49 : 38,
+                fontSize: wide ? 49 : 32,
                 color: colors.green,
                 letterSpacing: -2,
               }}
@@ -113,10 +113,11 @@ export function HomeScreen() {
               maxWidth: 420,
             }}
           >
-            Encuentra lo que necesitas, comparte lo que tienes y construyamos
-            comunidad, entre vecinos.
+            {wide
+              ? "Encuentra lo que necesitas, comparte lo que tienes y construyamos comunidad, entre vecinos."
+              : "Negocios, intercambios y apoyo. Todo empieza con un vecino."}
           </T>
-          <Row style={{ gap: 6 }}>
+          <Row style={{ gap: 6, display: wide ? "flex" : "none" }}>
             <Icon name="MapPin" size={14} />
             <T style={{ fontSize: 12, fontFamily: fonts.medium }}>
               {areaLabel(barrio)}, Lima
@@ -129,6 +130,7 @@ export function HomeScreen() {
         </View>
         <View
           style={{
+            display: wide ? "flex" : "none",
             width: wide ? "37%" : "100%",
             justifyContent: "flex-end",
             marginBottom: wide ? 0 : -24,
@@ -180,11 +182,13 @@ export function HomeScreen() {
             onPress={() => router.push(m.path)}
             style={({ pressed }) => ({
               backgroundColor: m.bg,
-              padding: 25,
+              padding: wide ? 25 : 18,
               borderRadius: 18,
-              gap: 17,
+              gap: wide ? 17 : 13,
               flex: 1,
-              minHeight: 285,
+              flexDirection: wide ? "column" : "row",
+              alignItems: wide ? "stretch" : "center",
+              minHeight: wide ? 285 : 94,
               opacity: pressed ? 0.8 : 1,
             })}
           >
@@ -200,12 +204,12 @@ export function HomeScreen() {
             >
               <Icon name={m.icon} color={m.ink} size={26} />
             </View>
-            <View style={{ gap: 8 }}>
+            <View style={{ gap: 8, flex: wide ? undefined : 1 }}>
               <T
                 style={{
                   fontFamily: fonts.title,
-                  fontSize: 22,
-                  lineHeight: 29,
+                  fontSize: wide ? 22 : 18,
+                  lineHeight: wide ? 29 : 24,
                   letterSpacing: -0.7,
                 }}
               >
@@ -214,12 +218,31 @@ export function HomeScreen() {
               <T style={{ fontSize: 12, color: m.ink, fontFamily: fonts.bold }}>
                 {m.subtitle}
               </T>
-              <T style={{ color: "#68776D", lineHeight: 21, fontSize: 13 }}>
+              <T
+                style={{
+                  display: wide ? "flex" : "none",
+                  color: "#68776D",
+                  lineHeight: 21,
+                  fontSize: 13,
+                }}
+              >
                 {m.body}
               </T>
             </View>
-            <Row style={{ justifyContent: "space-between", marginTop: "auto" }}>
-              <T style={{ fontFamily: fonts.bold, fontSize: 13, color: m.ink }}>
+            <Row
+              style={{
+                justifyContent: "space-between",
+                marginTop: wide ? "auto" : 0,
+              }}
+            >
+              <T
+                style={{
+                  display: wide ? "flex" : "none",
+                  fontFamily: fonts.bold,
+                  fontSize: 13,
+                  color: m.ink,
+                }}
+              >
                 {m.cta}
               </T>
               <Icon name="ArrowRight" color={m.ink} size={18} />

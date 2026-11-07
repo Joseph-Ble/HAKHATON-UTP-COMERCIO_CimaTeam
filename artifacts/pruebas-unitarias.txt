@@ -1,0 +1,38 @@
+
+> entrevecinos@1.0.0 test
+> node --test tests/*.test.js
+
+▶ PostgreSQL migration, RPC and RLS enforce the security boundary
+  ✔ visitors read public data but no private offers, contacts, roles or reports (25.447286ms)
+  ✔ authenticated users cannot edit tables directly or self-assign roles (7.038502ms)
+  ✔ author is derived from session and another user cannot modify resource (12.802112ms)
+  ✔ database checks rating uniqueness, range, self-rating and historical barrio (53.545159ms)
+  ✔ request, offer, private reply and closure preserve a real state history (28.163504ms)
+  ✔ pending and hidden security reports are protected, including edits and direct reads (19.124002ms)
+  ✔ invalid contact rolls back a publication, and revoke removes access (31.428147ms)
+  ✔ editorial permissions and profile updates do not grant authority (5.308651ms)
+✔ PostgreSQL migration, RPC and RLS enforce the security boundary (8721.125644ms)
+✔ public navigation data includes all four solidarity types and both emergency categories (2.722379ms)
+✔ visitor and another owner cannot mutate resources (1.72011ms)
+✔ one rating per business and author, with server-derived historical barrio (7.444511ms)
+✔ cannot rate emergencies or incomplete solidarity experiences (0.880427ms)
+✔ help offers have ownership, uniqueness, private replies and atomic history (1.155586ms)
+✔ security edits return to review and cannot undo moderator hiding (2.648552ms)
+✔ contacts are explicitly consented, never exposed to visitors and revocable (1.632985ms)
+✔ a failed operation leaves state untouched, including contact and history (0.4585ms)
+✔ private proposals allow coordination without external contact (0.734918ms)
+✔ free help validates intent, modality and absence of money (1.211414ms)
+✔ retiring preserves records but removes them from views and contact lookup (0.508605ms)
+ℹ tests 20
+ℹ suites 0
+ℹ pass 20
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 9152.894363
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.2
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.2
+npm notice To update run: npm install -g npm@12.2.2
+npm notice

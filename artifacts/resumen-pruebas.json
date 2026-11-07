@@ -1,0 +1,25 @@
+{
+  "business_rules_and_postgres": {
+    "passed": 20,
+    "failed": 0,
+    "evidence": "pruebas-unitarias.txt"
+  },
+  "browser_workflows": {
+    "passed": 7,
+    "failed": 0,
+    "evidence": [
+      "pruebas-navegador.txt",
+      "pruebas-contacto.txt"
+    ]
+  },
+  "mobile_layout_after_adjustment": {
+    "passed": 1,
+    "evidence": "pruebas-mobile.txt"
+  },
+  "production_web_smoke": {
+    "login": "passed",
+    "page_errors": []
+  },
+  "supabase_live": "not_configured",
+  "android_apk": "blocked: repo.reactnative.dev denied by environment network policy"
+}

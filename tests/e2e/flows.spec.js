@@ -1,4 +1,63 @@
 import { test, expect } from "@playwright/test";
+
+test("author editing, consent withdrawal and private coordination without a phone", async ({
+  page,
+}) => {
+  await login(page, "Ana Torres");
+  const path = "/ficha/20000000-0000-4000-8000-000000000001";
+  await page.goto(path);
+  await page
+    .getByRole("button", { name: "Editar información", exact: true })
+    .click();
+  await page
+    .getByLabel("Nombre del negocio o servicio")
+    .fill("La tiendita del parque");
+  await page.getByRole("checkbox").check();
+  await page.getByRole("button", { name: "Correo", exact: true }).click();
+  await page.getByLabel("Correo de contacto").fill("contacto@example.test");
+  await page
+    .getByRole("button", { name: "Guardar cambios", exact: true })
+    .click();
+  await expect(
+    page.getByRole("heading", { name: "La tiendita del parque" }),
+  ).toBeVisible();
+  await login(page, "Luis Mendoza");
+  await page.goto(path);
+  await expect(
+    page.getByRole("button", { name: "Contactar por correo", exact: true }),
+  ).toBeVisible();
+  await page
+    .getByRole("button", { name: "Enviar una propuesta", exact: true })
+    .click();
+  await page
+    .getByLabel("Tu mensaje")
+    .fill("Quisiera coordinar una compra por este medio.");
+  await page.getByRole("button", { name: "Enviar", exact: true }).click();
+  await expect(
+    page.getByText("Tu propuesta está pendiente de respuesta."),
+  ).toBeVisible();
+  await login(page, "Ana Torres");
+  await page.goto(path);
+  await page
+    .getByLabel("Tu respuesta para coordinar")
+    .fill("Podemos revisar la disponibilidad por aquí.");
+  await page
+    .getByRole("button", { name: "Guardar respuesta", exact: true })
+    .click();
+  await page
+    .getByRole("button", { name: "Retirar contacto externo", exact: true })
+    .click();
+  await login(page, "Luis Mendoza");
+  await page.goto(path);
+  await expect(
+    page.getByRole("button", { name: "Contactar por correo", exact: true }),
+  ).toHaveCount(0);
+  await expect(
+    page.getByText("Podemos revisar la disponibilidad por aquí.", {
+      exact: true,
+    }),
+  ).toBeVisible();
+});
 const login = async (page, name) => {
   await page.goto("/ajustes");
   await page.getByRole("button", { name, exact: true }).click();

@@ -18,6 +18,15 @@ test("PostgreSQL migration, RPC and RLS enforce the security boundary", async (t
       "utf8",
     ),
   );
+  await db.exec(
+    await fs.readFile(
+      new URL(
+        "../supabase/migrations/202611070002_editorial.sql",
+        import.meta.url,
+      ),
+      "utf8",
+    ),
+  );
   const seed = createSeed();
   for (const p of seed.profiles)
     await db.query(
@@ -30,8 +39,6 @@ test("PostgreSQL migration, RPC and RLS enforce the security boundary", async (t
     "posts",
     "reviews",
     "offers",
-    "guidance",
-    "services",
   ]) {
     const rows = table === "user_roles" ? seed.roles : seed[table];
     for (const row of rows) {
@@ -66,6 +73,8 @@ test("PostgreSQL migration, RPC and RLS enforce the security boundary", async (t
       for (const table of ["offers", "contacts", "user_roles", "reports"])
         assert.equal((await rows("select * from public." + table)).length, 0);
       assert.ok(!(await rows("select * from public.profiles"))[0].email);
+      assert.equal((await rows("select * from public.guidance")).length, 3);
+      assert.equal((await rows("select * from public.services")).length, 2);
       await assert.rejects(() =>
         rpc("update_profile", { name: "Intruso", barrio_id: "san-miguel" }),
       );
