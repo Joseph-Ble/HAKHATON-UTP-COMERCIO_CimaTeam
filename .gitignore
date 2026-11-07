@@ -41,6 +41,8 @@ playwright-report/
 artifacts/*.apk
 artifacts/*.aab
 artifacts/*.zip
+artifacts/commits.txt
+artifacts/paquetes.sha256
 artifacts/android-bundle/
 
 # typescript
